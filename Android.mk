@@ -16,6 +16,8 @@ ifneq ($(BOARD_IS_AUTOMOTIVE),true)
   endif
 endif
 
-ifeq ($(BOARD_HAVE_BLUETOOTH_QCOM),true)
+ifneq ($(filter imx6 imx7 imx8,$(TARGET_BOARD_PLATFORM)),)
+	include $(call all-named-subdir-makefiles,imx)
+else ifeq ($(BOARD_HAVE_BLUETOOTH_QCOM),true)
 	include $(call all-named-subdir-makefiles, msm8992)
 endif # BOARD_HAVE_BLUETOOTH_QCOM
