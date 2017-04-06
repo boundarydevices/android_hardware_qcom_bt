@@ -348,6 +348,7 @@ static int init(const bt_vendor_callbacks_t* p_cb, unsigned char *local_bdaddr)
 	/* BD address from boot property can override local_bdaddr */
 	if (property_get(BLUETOOTH_MAC_ADDR_BOOT_PROPERTY, bd_addr, NULL)) {
 		ALOGV("BD address read from Boot property: %s\n", bd_addr);
+		i = 0;
 		tok =  strtok(bd_addr, ":");
 		while (tok != NULL) {
 			ALOGV("bd add [%d]: %lx ", i, strtol(tok, NULL, 16));
@@ -359,7 +360,7 @@ static int init(const bt_vendor_callbacks_t* p_cb, unsigned char *local_bdaddr)
 				ALOGE("Invalid token in BD address");
 				break;
 			}
-			local_bd_addr_from_prop[5-i] = strtol(tok, NULL, 16);
+			local_bd_addr_from_prop[i] = strtol(tok, NULL, 16);
 			tok = strtok(NULL, ":");
 			i++;
 		}
