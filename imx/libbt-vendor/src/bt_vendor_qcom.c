@@ -44,6 +44,7 @@
 
 #define WAIT_TIMEOUT 200000
 #define BLUETOOTH_MAC_ADDR_BOOT_PROPERTY "ro.boot.btmacaddr"
+#define DEFAULT_BAUDRATE 2000000
 
 /******************************************************************************
  **  Externs
@@ -464,7 +465,7 @@ static int op(bt_vendor_opcode_t opcode, void *param)
 			if (!is_soc_initialized() && retval) {
 				ALOGV("rome_soc_init is started");
 				property_set("wc_transport.soc_initialized", "0");
-				if (rome_soc_init(fd, 2000000) < 0) {
+				if (rome_soc_init(fd, DEFAULT_BAUDRATE) < 0) {
 					retval = -1;
 				} else {
 					ALOGD("rome_soc_init is completed @2Mbaud");
