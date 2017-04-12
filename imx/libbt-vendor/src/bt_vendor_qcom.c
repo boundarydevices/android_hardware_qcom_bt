@@ -524,6 +524,10 @@ static int op(bt_vendor_opcode_t opcode, void *param)
 			break;
 
 		case BT_VND_OP_SET_AUDIO_STATE:
+		case BT_VND_OP_A2DP_OFFLOAD_START:
+		case BT_VND_OP_A2DP_OFFLOAD_STOP:
+		default:
+			ALOGI("unsupported opcode (0x%x)", opcode);
 			break;
 	}
 
