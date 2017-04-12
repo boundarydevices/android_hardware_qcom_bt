@@ -431,7 +431,12 @@ static int op(bt_vendor_opcode_t opcode, void *param)
 			ALOGI("bt-vendor : BT_VND_OP_POWER_CTRL: %s",
 			      (nState == BT_VND_PWR_ON)? "On" : "Off" );
 			/* BT Chipset Power Control through Device Tree Node */
+			if ((nState == BT_VND_PWR_ON) &&
+			    property_get_bool("wc_transport.vnd_power", 0))
+				bt_powerup(BT_VND_PWR_OFF);
 			retval = bt_powerup(nState);
+			if (retval == 0)
+				property_set("wc_transport.vnd_power", nState == BT_VND_PWR_ON ? "1" : "0");
 			break;
 
 		case BT_VND_OP_FW_CFG:
