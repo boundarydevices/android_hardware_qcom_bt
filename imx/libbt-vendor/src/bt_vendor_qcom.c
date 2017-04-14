@@ -174,7 +174,7 @@ static int bt_powerup(int en )
 	char type[16];
 	int fd = -1, size, i, ret;
 
-	char disable[PROPERTY_VALUE_MAX];
+	char prop[PROPERTY_VALUE_MAX];
 	char state;
 	char on = (en)?'1':'0';
 
@@ -186,14 +186,14 @@ static int bt_powerup(int en )
 	ALOGI("bt_powerup: %c", on);
 
 	/* Check if rfkill has been disabled */
-	ret = property_get("ro.rfkilldisabled", disable, "0");
+	ret = property_get("ro.rfkilldisabled", prop, "0");
 	if (!ret) {
 		ALOGE("Couldn't get ro.rfkilldisabled (%d)", ret);
 		return -1;
 	}
 	/* In case rfkill disabled, then no control power*/
-	if (strcmp(disable, "1") == 0) {
-		ALOGI("ro.rfkilldisabled : %s", disable);
+	if (strcmp(prop, "1") == 0) {
+		ALOGI("ro.rfkilldisabled : %s", prop);
 		return -1;
 	}
 
@@ -202,6 +202,12 @@ static int bt_powerup(int en )
 	bt_semaphore_get(lock_fd);
 	bt_wait_for_service_done();
 #endif
+
+	/* Checking if the rfkill node is in property */
+	if (property_get("ro.bt.rfkill.state", prop, NULL)) {
+		asprintf(&rfkill_state, "%s", prop);
+		goto skip;
+	}
 
 	/* Assign rfkill_id and find bluetooth rfkill state path*/
 	for (i=0; (rfkill_id == -1) && (rfkill_state == NULL); i++) {
@@ -223,7 +229,7 @@ static int bt_powerup(int en )
 			break;
 		}
 	}
-
+skip:
 	/* Get rfkill State to control */
 	if (rfkill_state != NULL) {
 		if ((fd = open(rfkill_state, O_RDWR)) < 0) {
@@ -234,6 +240,7 @@ static int bt_powerup(int en )
 #endif
 			return -1;
 		}
+		ALOGV("using %s", rfkill_state);
 	}
 
 	/* Write value to control rfkill */
