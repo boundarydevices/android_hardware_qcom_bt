@@ -530,7 +530,7 @@ static int op(bt_vendor_opcode_t opcode, void *param)
 #endif
 			break;
 
-		case BT_VND_OP_SET_AUDIO_STATE:
+		default:
 			break;
 	}
 

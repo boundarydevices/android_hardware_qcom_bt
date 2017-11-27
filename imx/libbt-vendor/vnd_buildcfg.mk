@@ -1,4 +1,4 @@
-generated_sources := $(local-generated-sources-dir)
+generated_sources := $(local-intermediates-dir)
 
 ifneq (,$(LIBBT_VENDORFILE))
         SRC := $(LIBBT_VENDORFILE)
