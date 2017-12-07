@@ -402,14 +402,14 @@ static bool is_soc_initialized() {
 
 	ALOGI("bt-vendor : is_soc_initialized");
 
-	ret = property_get("wc_transport.soc_initialized", init_value, NULL);
+	ret = property_get("bluetooth.soc_initialized", init_value, NULL);
 	if (ret != 0) {
-		ALOGI("wc_transport.soc_initialized set to %s\n", init_value);
+		ALOGI("bluetooth.soc_initialized set to %s\n", init_value);
 		if (!strncasecmp(init_value, "1", sizeof("1"))) {
 			init = true;
 		}
 	} else {
-		ALOGE("%s: Failed to get wc_transport.soc_initialized", __FUNCTION__);
+		ALOGE("%s: Failed to get bluetooth.soc_initialized", __FUNCTION__);
 	}
 
 	return init;
@@ -438,12 +438,12 @@ static int op(bt_vendor_opcode_t opcode, void *param)
 			ALOGI("bt-vendor : BT_VND_OP_POWER_CTRL: %s",
 			      (nState == BT_VND_PWR_ON)? "On" : "Off" );
 			/* BT Chipset Power Control through Device Tree Node */
-			property_get("wc_transport.vnd_power", value, "0");
+			property_get("bluetooth.vnd_power", value, "0");
 			if ((nState == BT_VND_PWR_ON) && (strcmp(value, "1") == 0))
 				bt_powerup(BT_VND_PWR_OFF);
 			retval = bt_powerup(nState);
 			if (retval == 0)
-				property_set("wc_transport.vnd_power", nState == BT_VND_PWR_ON ? "1" : "0");
+				property_set("bluetooth.vnd_power", nState == BT_VND_PWR_ON ? "1" : "0");
 			break;
 
 		case BT_VND_OP_FW_CFG:
@@ -476,20 +476,20 @@ static int op(bt_vendor_opcode_t opcode, void *param)
 
 			if (!is_soc_initialized() && retval) {
 				ALOGV("rome_soc_init is started");
-				property_set("wc_transport.soc_initialized", "0");
+				property_set("bluetooth.soc_initialized", "0");
 				if (rome_soc_init(fd, DEFAULT_BAUDRATE) < 0) {
 					retval = -1;
 				} else {
 					ALOGD("rome_soc_init is completed @2Mbaud");
-					property_set("wc_transport.soc_initialized", "1");
+					property_set("bluetooth.soc_initialized", "1");
 				}
 			}
 
-			property_set("wc_transport.clean_up","0");
+			property_set("bluetooth.clean_up","0");
 			break;
 
 		case BT_VND_OP_USERIAL_CLOSE:
-			property_set("wc_transport.clean_up","1");
+			property_set("bluetooth.clean_up","1");
 			userial_vendor_close();
 			break;
 
@@ -518,7 +518,7 @@ static int op(bt_vendor_opcode_t opcode, void *param)
 				bt_vendor_cbacks->epilog_cb(BT_VND_OP_RESULT_SUCCESS);
 			}
 #else
-			property_get("wc_transport.hci_filter_status", value, "0");
+			property_get("bluetooth.hci_filter_status", value, "0");
 			if (is_soc_initialized()&& (strcmp(value,"1") == 0)) {
 				hw_epilog_process();
 			} else {
