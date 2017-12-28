@@ -1384,7 +1384,7 @@ static void flow_control(int fd, int opt)
 	ioctl(fd, TIOCMSET, &c_opt);
 }
 
-int rome_set_baudrate_req(int fd, int local_baud_rate, int controller_baud_rate)
+int rome_set_baudrate_req(int fd, unsigned char baud_rate)
 {
 	int size, err = 0;
 	unsigned char cmd[HCI_MAX_CMD_SIZE];
@@ -1398,7 +1398,7 @@ int rome_set_baudrate_req(int fd, int local_baud_rate, int controller_baud_rate)
 	cmd[0]  = HCI_COMMAND_PKT;
 	cmd_hdr->opcode = cmd_opcode_pack(HCI_VENDOR_CMD_OGF, EDL_SET_BAUDRATE_CMD_OCF);
 	cmd_hdr->plen     = VSC_SET_BAUDRATE_REQ_LEN;
-	cmd[4]  = controller_baud_rate;
+	cmd[4]  = baud_rate;
 
 	/* Total length of the packet to be sent to the Controller */
 	size = (HCI_CMD_IND + HCI_COMMAND_HDR_SIZE + VSC_SET_BAUDRATE_REQ_LEN);
@@ -1417,7 +1417,7 @@ int rome_set_baudrate_req(int fd, int local_baud_rate, int controller_baud_rate)
 		goto error;
 	}
 	/* Change Local UART baudrate to high speed UART */
-	userial_vendor_set_baud(local_baud_rate);
+	userial_vendor_set_baud(baud_rate);
 
 	/* Flow on after changing local uart baudrate */
 	flow_control(fd, MSM_ENABLE_FLOW_CTRL);
@@ -1492,7 +1492,8 @@ int rome_soc_init(int fd, int speed)
 {
 	int err = -1;
 	int ret = 0;
-	int size, local_baud_rate = 0, controller_baud_rate = 0;
+	int size;
+	unsigned char baud_rate = 0;
 
 	vnd_userial.fd = fd;
 
@@ -1544,7 +1545,7 @@ int rome_soc_init(int fd, int speed)
 			}
 
 			/* Change baud rate 115.2 kbps to 3Mbps*/
-			err = rome_hci_reset_req(fd, local_baud_rate);
+			err = rome_hci_reset_req(fd, baud_rate);
 			if (err < 0) {
 				ALOGE("HCI Reset Failed !!\n");
 				ret = -1;
@@ -1579,18 +1580,10 @@ int rome_soc_init(int fd, int speed)
 			rampatch_file_path = TF_RAMPATCH_TLV_1_0_1_PATH;
 			nvm_file_path = TF_NVM_TLV_1_0_1_PATH;
 download:
-			/* Check if user requested for 115200 kbps */
-			if (speed == 115200) {
-				local_baud_rate = USERIAL_BAUD_115200;
-				controller_baud_rate = BAUDRATE_115200;
-			}
-			else {
-				/* Change only if baud rate requested is valid or not */
-				isSpeedValid(speed, &local_baud_rate, &controller_baud_rate);
-				if (local_baud_rate < 0 || controller_baud_rate < 0) {
-					ret = -1;
-					goto error;
-				}
+			isSpeedValid(speed, &baud_rate);
+			if (baud_rate < 0) {
+				ret = -1;
+				goto error;
 			}
 
 			/* Donwload TLV files (rampatch, NVM) */
@@ -1608,7 +1601,7 @@ download:
 			 * Overriding the baud rate value in NVM file with the user
 			 * requested baud rate, since default baud rate in NVM file is 3M.
 			 */
-			err = rome_set_baudrate_req(fd, local_baud_rate, controller_baud_rate);
+			err = rome_set_baudrate_req(fd, baud_rate);
 			if (err < 0) {
 				ALOGE("%s: Baud rate change failed!\n", __FUNCTION__);
 				ret = -1;
@@ -1616,7 +1609,7 @@ download:
 			}
 
 			/* Perform HCI reset here*/
-			err = rome_hci_reset_req(fd, local_baud_rate);
+			err = rome_hci_reset_req(fd, baud_rate);
 			if (err < 0) {
 				ALOGE("HCI Reset Failed !!!\n");
 				ret = -1;
