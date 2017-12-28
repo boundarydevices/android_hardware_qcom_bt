@@ -253,6 +253,6 @@ int userial_vendor_ioctl(userial_vendor_ioctl_op_t op, int *p_data);
 *******************************************************************************/
 int read_hci_event(int fd, unsigned char* buf, int size);
 
-int isSpeedValid(int speed, int *local_baud_rate, int *controller_baud_rate);
+int isSpeedValid(int speed, unsigned char *baud_rate);
 
 #endif /* HCI_UART_H */

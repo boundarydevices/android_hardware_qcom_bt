@@ -493,52 +493,41 @@ int read_hci_event(int fd, unsigned char* buf, int size)
 	return count;
 }
 
-int isSpeedValid(int speed, int *local_baud_rate, int *controller_baud_rate)
+int isSpeedValid(int speed, unsigned char *baud_rate)
 {
 	switch(speed) {
 	case 9600:
-		*local_baud_rate = USERIAL_BAUD_9600;
-		*controller_baud_rate = BAUDRATE_9600;
+		*baud_rate = BAUDRATE_9600;
 		break;
 	case 19200:
-		*local_baud_rate = USERIAL_BAUD_19200;
-		*controller_baud_rate = BAUDRATE_19200;
+		*baud_rate = BAUDRATE_19200;
 		break;
 	case 57600:
-		*local_baud_rate = USERIAL_BAUD_57600;
-		*controller_baud_rate = BAUDRATE_57600;
+		*baud_rate = BAUDRATE_57600;
 		break;
 	case 115200:
-		*local_baud_rate = USERIAL_BAUD_115200;
-		*controller_baud_rate = BAUDRATE_115200;
+		*baud_rate = BAUDRATE_115200;
 		break;
 	case 230400:
-		*local_baud_rate = USERIAL_BAUD_230400;
-		*controller_baud_rate = BAUDRATE_230400;
+		*baud_rate = BAUDRATE_230400;
 		break;
 	case 460800:
-		*local_baud_rate = USERIAL_BAUD_460800;
-		*controller_baud_rate = BAUDRATE_460800;
+		*baud_rate = BAUDRATE_460800;
 		break;
 	case 921600:
-		*local_baud_rate = USERIAL_BAUD_921600;
-		*controller_baud_rate = BAUDRATE_921600;
+		*baud_rate = BAUDRATE_921600;
 		break;
 	case 1000000:
-		*local_baud_rate = USERIAL_BAUD_1M;
-		*controller_baud_rate = BAUDRATE_1000000;
+		*baud_rate = BAUDRATE_1000000;
 		break;
 	case 2000000:
-		*local_baud_rate = USERIAL_BAUD_2M;
-		*controller_baud_rate = BAUDRATE_2000000;
+		*baud_rate = BAUDRATE_2000000;
 		break;
 	case 3000000:
-		*local_baud_rate = USERIAL_BAUD_3M;
-		*controller_baud_rate = BAUDRATE_3000000;
+		*baud_rate = BAUDRATE_3000000;
 		break;
 	case 4000000:
-		*local_baud_rate = USERIAL_BAUD_4M;
-		*controller_baud_rate = BAUDRATE_4000000;
+		*baud_rate = BAUDRATE_4000000;
 		break;
 	case 300:
 	case 600:
@@ -546,7 +535,7 @@ int isSpeedValid(int speed, int *local_baud_rate, int *controller_baud_rate)
 	case 2400:
 	default:
 		fprintf(stderr, "Invalid baud rate passed!\n");
-		*local_baud_rate = *controller_baud_rate = -1;
+		*baud_rate = -1;
 		break;
 	}
 	return -1;
