@@ -767,7 +767,7 @@ error:
 	return err;
 }
 
-int rome_get_tlv_file(char *file_path)
+int rome_get_tlv_file(char *file_path, unsigned char baud_rate)
 {
 	FILE * pFile;
 	long fileSize;
@@ -886,6 +886,17 @@ int rome_get_tlv_file(char *file_path)
 					readSize -= nvm_size;
 					nvm_index -= nvm_size;
 					continue;
+				}
+			}
+
+			if (nvm_ptr->tag_id == TAG_NUM_17) {
+				ALOGI("Forcing IBS to be disabled\n");
+				nvm_byte_ptr[FWCONF_IBS_VAL_OFFSET] &=
+					(~(FWCONF_IBS_ENABLE << FWCONF_IBS_VAL_BIT));
+				if (baud_rate != nvm_byte_ptr[FWCONF_BAUD_VAL_OFFSET]) {
+					ALOGI("Change Vendor Baud from 0x%02x to 0x%02x\n",
+					      nvm_byte_ptr[FWCONF_BAUD_VAL_OFFSET], baud_rate);
+					nvm_byte_ptr[FWCONF_BAUD_VAL_OFFSET] = baud_rate;
 				}
 			}
 
@@ -1044,13 +1055,13 @@ error:
 	return err;
 }
 
-int rome_download_tlv_file(int fd)
+int rome_download_tlv_file(int fd, unsigned char baud_rate)
 {
 	int tlv_size, err = -1;
 
 	/* Rampatch TLV file Downloading */
 	pdata_buffer = NULL;
-	if ((tlv_size = rome_get_tlv_file(rampatch_file_path)) < 0)
+	if ((tlv_size = rome_get_tlv_file(rampatch_file_path, baud_rate)) < 0)
 		goto error;
 
 	if ((err =rome_tlv_dnld_req(fd, tlv_size)) <0 )
@@ -1061,7 +1072,7 @@ int rome_download_tlv_file(int fd)
 		pdata_buffer = NULL;
 	}
 	/* NVM TLV file Downloading */
-	if ((tlv_size = rome_get_tlv_file(nvm_file_path)) < 0)
+	if ((tlv_size = rome_get_tlv_file(nvm_file_path, baud_rate)) < 0)
 		goto error;
 
 	if ((err = rome_tlv_dnld_req(fd, tlv_size)) <0 )
@@ -1601,7 +1612,7 @@ download:
 			}
 
 			/* Donwload TLV files (rampatch, NVM) */
-			err = rome_download_tlv_file(fd);
+			err = rome_download_tlv_file(fd, baud_rate);
 			if (err < 0) {
 				ALOGE("%s: Download TLV file failed!\n", __FUNCTION__);
 				ret = -1;
