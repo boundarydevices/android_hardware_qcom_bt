@@ -869,10 +869,24 @@ int rome_get_tlv_file(char *file_path)
 
 			/* Write BD Address */
 			if (nvm_ptr->tag_id == TAG_NUM_2) {
-				memcpy(nvm_byte_ptr, vnd_local_bd_addr, 6);
-				ALOGI("BD Address: %.02x:%.02x:%.02x:%.02x:%.02x:%.02x",
-				      *nvm_byte_ptr, *(nvm_byte_ptr+1), *(nvm_byte_ptr+2),
-				      *(nvm_byte_ptr+3), *(nvm_byte_ptr+4), *(nvm_byte_ptr+5));
+				if (vnd_local_bd_addr[0] != 0) {
+					memcpy(nvm_byte_ptr, vnd_local_bd_addr, 6);
+					ALOGI("BD Address: %.02x:%.02x:%.02x:%.02x:%.02x:%.02x",
+					      *nvm_byte_ptr, *(nvm_byte_ptr+1), *(nvm_byte_ptr+2),
+					      *(nvm_byte_ptr+3), *(nvm_byte_ptr+4), *(nvm_byte_ptr+5));
+				} else {
+					/* Remove it from NVM data */
+					int nvm_size = nvm_ptr->tag_len + sizeof(tlv_nvm_hdr);
+					ALOGI("Skip BD Address from NVM\n");
+					nvm_index += nvm_ptr->tag_len;
+					nvm_byte_ptr += nvm_ptr->tag_len;
+					memmove(nvm_ptr, nvm_byte_ptr, nvm_length - nvm_index);
+					nvm_length -= nvm_size;
+					nvm_byte_ptr -= nvm_size;
+					readSize -= nvm_size;
+					nvm_index -= nvm_size;
+					continue;
+				}
 			}
 
 			for (i =0;(i<nvm_ptr->tag_len && (i*3 + 2) <PRINT_BUF_SIZE);i++)
