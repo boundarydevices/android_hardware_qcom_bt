@@ -183,27 +183,27 @@
 #define EXTRACT_BYTE(val, pos)      (char) (((val) >> (8 * (pos))) & 0xFF)
 #define CALC_SEG_SIZE(len, max)   ((plen) % (max))?((plen/max)+1) : ((plen) / (max))
 
-#define ROME_FW_PATH                    "/system/etc/firmware/rampatch.img"
-#define ROME_RAMPATCH_TLV_PATH          "/system/etc/firmware/rampatch_tlv.img"
-#define ROME_NVM_TLV_PATH               "/system/etc/firmware/nvm_tlv.bin"
-#define ROME_RAMPATCH_TLV_1_0_3_PATH    "/system/etc/firmware/rampatch_tlv_1.3.tlv"
-#define ROME_NVM_TLV_1_0_3_PATH         "/system/etc/firmware/nvm_tlv_1.3.bin"
-#define ROME_RAMPATCH_TLV_2_0_1_PATH    "/system/etc/firmware/rampatch_tlv_2.1.tlv"
-#define ROME_NVM_TLV_2_0_1_PATH         "/system/etc/firmware/nvm_tlv_2.1.bin"
-#define ROME_RAMPATCH_TLV_3_0_0_PATH    "/system/etc/firmware/rampatch_tlv_3.0.tlv"
-#define ROME_NVM_TLV_3_0_0_PATH         "/system/etc/firmware/nvm_tlv_3.0.bin"
-#define ROME_RAMPATCH_TLV_3_0_2_PATH    "/system/etc/firmware/btfw32.tlv"
-#define ROME_NVM_TLV_3_0_2_PATH         "/system/etc/firmware/btnv32.bin"
+#define ROME_FW_PATH                    "/vendor/firmware/rampatch.img"
+#define ROME_RAMPATCH_TLV_PATH          "/vendor/firmware/rampatch_tlv.img"
+#define ROME_NVM_TLV_PATH               "/vendor/firmware/nvm_tlv.bin"
+#define ROME_RAMPATCH_TLV_1_0_3_PATH    "/vendor/firmware/rampatch_tlv_1.3.tlv"
+#define ROME_NVM_TLV_1_0_3_PATH         "/vendor/firmware/nvm_tlv_1.3.bin"
+#define ROME_RAMPATCH_TLV_2_0_1_PATH    "/vendor/firmware/rampatch_tlv_2.1.tlv"
+#define ROME_NVM_TLV_2_0_1_PATH         "/vendor/firmware/nvm_tlv_2.1.bin"
+#define ROME_RAMPATCH_TLV_3_0_0_PATH    "/vendor/firmware/rampatch_tlv_3.0.tlv"
+#define ROME_NVM_TLV_3_0_0_PATH         "/vendor/firmware/nvm_tlv_3.0.bin"
+#define ROME_RAMPATCH_TLV_3_0_2_PATH    "/vendor/firmware/btfw32.tlv"
+#define ROME_NVM_TLV_3_0_2_PATH         "/vendor/firmware/btnv32.bin"
 #ifdef _PLATFORM_MDM_
-#define TF_RAMPATCH_TLV_1_0_0_PATH      "/system/etc/firmware/rampatch_tlv_tf_1.0.tlv"
-#define TF_NVM_TLV_1_0_0_PATH           "/system/etc/firmware/nvm_tlv_tf_1.0.bin"
-#define TF_RAMPATCH_TLV_1_0_1_PATH      "/system/etc/firmware/tfbtfw11.tlv"
-#define TF_NVM_TLV_1_0_1_PATH           "/system/etc/firmware/tfbtnv11.bin"
+#define TF_RAMPATCH_TLV_1_0_0_PATH      "/vendor/firmware/rampatch_tlv_tf_1.0.tlv"
+#define TF_NVM_TLV_1_0_0_PATH           "/vendor/firmware/nvm_tlv_tf_1.0.bin"
+#define TF_RAMPATCH_TLV_1_0_1_PATH      "/vendor/firmware/tfbtfw11.tlv"
+#define TF_NVM_TLV_1_0_1_PATH           "/vendor/firmware/tfbtnv11.bin"
 #else
-#define TF_RAMPATCH_TLV_1_0_0_PATH      "/system/etc/firmware/qca/rampatch_tlv_tf_1.0.tlv"
-#define TF_NVM_TLV_1_0_0_PATH           "/system/etc/firmware/qca/nvm_tlv_tf_1.0.bin"
-#define TF_RAMPATCH_TLV_1_0_1_PATH      "/system/etc/firmware/qca/tfbtfw11.tlv"
-#define TF_NVM_TLV_1_0_1_PATH           "/system/etc/firmware/qca/tfbtnv11.bin"
+#define TF_RAMPATCH_TLV_1_0_0_PATH      "/vendor/firmware/qca/rampatch_tlv_tf_1.0.tlv"
+#define TF_NVM_TLV_1_0_0_PATH           "/vendor/firmware/qca/nvm_tlv_tf_1.0.bin"
+#define TF_RAMPATCH_TLV_1_0_1_PATH      "/vendor/firmware/qca/tfbtfw11.tlv"
+#define TF_NVM_TLV_1_0_1_PATH           "/vendor/firmware/qca/tfbtnv11.bin"
 #endif
 
 /* This header value in rampatch file decides event handling mechanism in the HOST */
