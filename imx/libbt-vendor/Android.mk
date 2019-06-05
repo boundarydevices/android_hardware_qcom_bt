@@ -28,9 +28,28 @@ LOCAL_SRC_FILES := \
         src/hci_uart.c \
         src/hw_rome.c
 
+ifeq ($(QCOM_BT_USE_SIBS),true)
+LOCAL_CFLAGS += -DQCOM_BT_SIBS_ENABLE
+endif
+
+ifeq ($(BOARD_HAS_QCA_BT_ROME),true)
+LOCAL_CFLAGS += -DBT_SOC_TYPE_ROME
+endif
+
 LOCAL_C_INCLUDES += \
         $(LOCAL_PATH)/include \
-        $(BDROID_DIR)/hci/include
+        $(BDROID_DIR)/hci/include \
+        $(TARGET_OUT_HEADERS)/bt/hci_qcomm_init \
+        system/core/include
+
+ifeq ($(WIFI_BT_STATUS_SYNC), true)
+LOCAL_CFLAGS += -DWIFI_BT_STATUS_SYNC
+endif #WIFI_BT_STATUS_SYNC
+
+ifeq ($(BOARD_HAS_QCA_BT_AR3002), true)
+LOCAL_C_FLAGS := \
+        -DBT_WAKE_VIA_PROC
+endif #BOARD_HAS_QCA_BT_AR3002
 
 ifeq ($(WIFI_BT_STATUS_SYNC), true)
 LOCAL_CFLAGS += -DWIFI_BT_STATUS_SYNC
@@ -40,6 +59,7 @@ LOCAL_SHARED_LIBRARIES := \
         libcutils \
         liblog
 
+LOCAL_CFLAGS += -Wno-error
 LOCAL_MODULE := libbt-vendor
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_CLASS := SHARED_LIBRARIES
@@ -50,6 +70,10 @@ LOCAL_MODULE_PATH_32 := $(TARGET_OUT_VENDOR)/lib
 LOCAL_MODULE_PATH_64 := $(TARGET_OUT_VENDOR)/lib64
 else
 LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)
+endif
+
+ifneq ($(BOARD_ANT_WIRELESS_DEVICE),)
+LOCAL_CFLAGS += -DENABLE_ANT
 endif
 
 include $(LOCAL_PATH)/vnd_buildcfg.mk
