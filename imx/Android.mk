@@ -1,3 +1,4 @@
-ifneq ($(filter imx6 imx7 imx8,$(TARGET_BOARD_PLATFORM)),)
+LOCAL_PATH := $(call my-dir)
+ifneq ($(filter imx,$(TARGET_BOARD_PLATFORM)),)
 include $(call all-named-subdir-makefiles,libbt-vendor)
 endif
