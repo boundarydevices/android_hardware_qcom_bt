@@ -75,10 +75,10 @@ void hw_epilog_process(void);
 #include <dlfcn.h>
 #include "cutils/properties.h"
 
-static const char WIFI_PROP_NAME[]    = "wlan.driver.status";
-static const char SERVICE_PROP_NAME[] = "bluetooth.hsic_ctrl";
-static const char BT_STATUS_NAME[]    = "bluetooth.enabled";
-static const char WIFI_SERVICE_PROP[] = "wlan.hsic_ctrl";
+static const char WIFI_PROP_NAME[]    = "vendor.wlan.driver.status";
+static const char SERVICE_PROP_NAME[] = "vendor.bluetooth.hsic_ctrl";
+static const char BT_STATUS_NAME[]    = "vendor.bluetooth.enabled";
+static const char WIFI_SERVICE_PROP[] = "vendor.wlan.hsic_ctrl";
 
 #define WIFI_BT_STATUS_LOCK    "/data/connectivity/wifi_bt_lock"
 int isInit=0;

@@ -56,7 +56,7 @@ int hw_config(int nState)
 
 	ALOGI("try to set %s", szReqSt);
 
-	if (property_set("bluetooth.hciattach", szReqSt) < 0) {
+	if (property_set("vendor.bluetooth.hciattach", szReqSt) < 0) {
 		ALOGE("Property Setting fail");
 		return -1;
 	}
@@ -67,7 +67,7 @@ int hw_config(int nState)
 int readTrpState()
 {
 	char szBtStatus[PROPERTY_VALUE_MAX] = {0, };
-	if (property_get("bluetooth.status", szBtStatus, "") < 0) {
+	if (property_get("vendor.bluetooth.status", szBtStatus, "") < 0) {
 		ALOGE("Fail to get bluetooth satus");
 		return FALSE;
 	}
