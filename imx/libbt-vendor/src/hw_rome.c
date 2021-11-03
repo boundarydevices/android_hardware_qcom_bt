@@ -885,6 +885,10 @@ int rome_get_tlv_file(char *file_path, unsigned char baud_rate)
 					nvm_byte_ptr -= nvm_size;
 					readSize -= nvm_size;
 					nvm_index -= nvm_size;
+					/* update tlv size in its header */
+					ptlv_header->tlv_length1 = (nvm_length & 0xFF);
+					ptlv_header->tlv_length2 = (nvm_length & 0xFF00) >> 8;
+					ptlv_header->tlv_length3 = (nvm_length & 0xFF0000) >> 16;
 					continue;
 				}
 			}
